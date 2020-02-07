@@ -72,7 +72,10 @@ func NewSlack(config config.Config) (*Slack, error) {
 // Send a SlackMessage to Slack
 func (s *Slack) Send(c context.Context, client *http.Client, message msg.Message) error {
 	for _, slackMessage := range s.NewSlackMessage(message) {
+
+		log.Print("Printing slackMessage:")
 		fmt.Println(slackMessage)
+
 		b := new(bytes.Buffer)
 		err := json.NewEncoder(b).Encode(slackMessage)
 		if err != nil {
@@ -80,7 +83,11 @@ func (s *Slack) Send(c context.Context, client *http.Client, message msg.Message
 			return err
 		}
 
+		log.Print("Logging b.Bytes:")
 		log.Print(string(b.Bytes()))
+
+		log.Print("Logging s.Url:")
+		log.Print(s.Url)
 
 		req, _ := http.NewRequest("POST", s.Url, b)
 		req.Header.Set("Content-Type", "application/json")
